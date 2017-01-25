@@ -23,25 +23,30 @@ class SubmissionsController < ApplicationController
 
         @submission = @contest.submissions.create(BinUri: @BinUri_url, RootfsUri: @Rootfs_url)
 
-        # @my_hash = {
-        #     :BinUri => @submission.BinUri, 
-        #     :RootfsUri => @submission.BinUri,
-        #     :Timeout => @contest.Timeout,
-        #     :MemLimit => @contest.MemLimit,
-        #     :Command => @contest.Command.split(","),
-        #     :Stdin => @contest.Stdin
-        # } 
-        render plain: @contest.inspect
-        # render plain: @my_hash.inspect
-        # render plain: @contest.Command.inspect
+        @my_hash = {
+            :BinUri => @submission.BinUri, 
+            :RootfsUri => @submission.BinUri,
+            :Timeout => @contest.Timeout,
+            :MemLimit => @contest.MemLimit,
+            :Command => @contest.Command.split(","),
+            :Stdin => @contest.Stdin
+        } 
+        @msg = JSON.generate(@my_hash)
 
-        #<Contest id: 4, name: "asdf", description: "qwer", duedate: "2017-01-25 22:39:00", created_at: "2017-01-25 22:40:39", updated_at: "2017-01-25 22:40:39", Timeout: nil, MemLimit: nil, Command: nil, Stdin: nil>
+        conn = Bunny.new(:automatically_recover => false)
+        conn.start
 
-        # if @submission.save
-        #     redirect_to contest_path(@contest), success: 'File successfully uploaded'
-        # else
-        #     flash.now[:notice] = 'There was an error'
-        #     render :show
-        # end
+        ch   = conn.create_channel
+        q    = ch.queue("task_queue", :durable => true)
+
+        q.publish(@msg, :persistent => true)
+        conn.close
+
+        if @submission.save
+            redirect_to contest_path(@contest), success: 'File successfully uploaded'
+        else
+            flash.now[:notice] = 'There was an error'
+            render :show
+        end
     end
 end
