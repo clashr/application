@@ -4,6 +4,7 @@ class SubmissionsController < ApplicationController
     require "json"
     def create
         @contest = Contest.find(params[:contest_id])
+
         Aws.config.update(
           endpoint: 'http://localhost:9000',
           access_key_id: 'S7YWWOUANA5KR0P0DHHP',
@@ -22,20 +23,25 @@ class SubmissionsController < ApplicationController
 
         @submission = @contest.submissions.create(BinUri: @BinUri_url, RootfsUri: @Rootfs_url)
 
-        # my_hash = {
-        #     :BinUri => @submission.BinUri_url, 
-        #     :RootfsUri => @submission.BinUri_url,
-        #     :Timeout => 1000,
-        #     :MemLimit => 3000,
-        #     :Command => ['run'],
-        #     :Stdin => "5\n10"
+        # @my_hash = {
+        #     :BinUri => @submission.BinUri, 
+        #     :RootfsUri => @submission.BinUri,
+        #     :Timeout => @contest.Timeout,
+        #     :MemLimit => @contest.MemLimit,
+        #     :Command => @contest.Command.split(","),
+        #     :Stdin => @contest.Stdin
         # } 
+        render plain: @contest.inspect
+        # render plain: @my_hash.inspect
+        # render plain: @contest.Command.inspect
 
-        if @submission.save
-            redirect_to contest_path(@contest), success: 'File successfully uploaded'
-        else
-            flash.now[:notice] = 'There was an error'
-            render :show
-        end
+        #<Contest id: 4, name: "asdf", description: "qwer", duedate: "2017-01-25 22:39:00", created_at: "2017-01-25 22:40:39", updated_at: "2017-01-25 22:40:39", Timeout: nil, MemLimit: nil, Command: nil, Stdin: nil>
+
+        # if @submission.save
+        #     redirect_to contest_path(@contest), success: 'File successfully uploaded'
+        # else
+        #     flash.now[:notice] = 'There was an error'
+        #     render :show
+        # end
     end
 end
