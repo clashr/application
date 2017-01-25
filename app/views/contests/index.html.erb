@@ -8,6 +8,10 @@
       <th>Name</th>
       <th>Description</th>
       <th>Duedate</th>
+      <th>Timeout</th>
+      <th>Memlimit</th>
+      <th>Command</th>
+      <th>Stdin</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -18,6 +22,10 @@
         <td><%= contest.name %></td>
         <td><%= contest.description %></td>
         <td><%= contest.duedate %></td>
+        <td><%= contest.Timeout %></td>
+        <td><%= contest.MemLimit %></td>
+        <td><%= contest.Command %></td>
+        <td><%= contest.Stdin %></td>
         <td><%= link_to 'Show', contest %></td>
         <td><%= link_to 'Edit', edit_contest_path(contest) %></td>
         <td><%= link_to 'Destroy', contest, method: :delete, data: { confirm: 'Are you sure?' } %></td>
