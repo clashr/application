@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170125184415) do
+ActiveRecord::Schema.define(version: 20170125223204) do
 
   create_table "contests", force: :cascade do |t|
     t.string   "name"
@@ -18,6 +18,10 @@ ActiveRecord::Schema.define(version: 20170125184415) do
     t.datetime "duedate"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "Timeout"
+    t.integer  "MemLimit"
+    t.string   "Command"
+    t.string   "Stdin"
   end
 
   create_table "submissions", force: :cascade do |t|

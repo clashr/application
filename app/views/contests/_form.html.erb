@@ -26,6 +26,26 @@
     <%= f.datetime_select :duedate %>
   </div>
 
+  <div class="field">
+    <%= f.label :Timeout %>
+    <%= f.number_field :Timeout %>
+  </div>
+
+  <div class="field">
+    <%= f.label :MemLimit %>
+    <%= f.number_field :MemLimit %>
+  </div>
+
+  <div class="field">
+    Enter commands separated by a comma<%= f.label :Command %>
+    <%= f.text_field :Command %>
+  </div>
+
+  <div class="field">
+    <%= f.label :Stdin %>
+    <%= f.text_field :Stdin %>
+  </div>
+
   <div class="actions">
     <%= f.submit %>
   </div>
