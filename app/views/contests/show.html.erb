@@ -1,0 +1,66 @@
+<p id="notice"><%= notice %></p>
+
+<h2>Contest Details</h2>
+<p>
+  <strong>Contest Name:</strong>
+  <%= @contest.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @contest.description %>
+</p>
+
+<p>
+  <strong>Duedate:</strong>
+  <%= @contest.duedate %>
+</p>
+
+<h2>Submissions</h2>
+<% @contest.submissions.each do |submission| %>
+  <p>
+    <strong>Submitter:</strong>
+    <%= submission.submitter %>
+  </p>
+ 
+  <p>
+    <strong>Submission Date:</strong>
+    <%= submission.created_at %>
+  </p>
+
+  <p>
+    <strong>Submitted Files:</strong>
+    <br>
+    <strong>BinUri</strong>
+    <%= submission.BinUri %>
+    <br>
+    <strong>RootfsUri</strong>
+    <%= submission.RootfsUri %>
+  </p>
+<% end %>
+
+<h2>Add a Submission:</h2>
+<%= form_for([@contest, @contest.submissions.build]) do |f| %>
+
+  <p>
+    <%= f.label :submitter %><br>
+    <%= f.text_field :submitter %>
+  </p>
+
+  <p>
+    <%= f.label :BinUri %><br>
+    <%= f.file_field :BinUri %>
+  </p>
+ 
+  <p>
+    <%= f.label :RootfsUri %><br>
+    <%= f.file_field :RootfsUri %>
+  </p>
+ 
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
+
+<%= link_to 'Edit', edit_contest_path(@contest) %> |
+<%= link_to 'Back', contests_path %>

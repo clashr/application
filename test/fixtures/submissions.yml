@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  submitter: MyString
+  BinUri: MyString
+  RootfsUri: MyString
+  contest: one
+
+two:
+  submitter: MyString
+  BinUri: MyString
+  RootfsUri: MyString
+  contest: two
