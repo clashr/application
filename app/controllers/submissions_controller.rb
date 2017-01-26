@@ -4,6 +4,8 @@ class SubmissionsController < ApplicationController
     require "json"
     def create
         @contest = Contest.find(params[:contest_id])
+        @submission = @contest.submissions.create(submission_params)
+        # 
 
         Aws.config.update(
           endpoint: 'http://localhost:9000',
@@ -21,8 +23,18 @@ class SubmissionsController < ApplicationController
         obj.upload_file(params[:submission][:RootfsUri].open, acl:'public-read')
         @Rootfs_url = obj.public_url
 
-        @submission = @contest.submissions.create(BinUri: @BinUri_url, RootfsUri: @Rootfs_url)
+        @submission[:BinUri] = @BinUri_url
+        @submission[:RootfsUri] = @RootfsUri
 
+        # # @submission = @contest.submissions.new(
+        # #     submission_id: params[:submission][:Submission_id],
+        # #     submitter: params[:submission][:submitter],
+        # #     BinUri: @BinUri_url, 
+        # #     RootfsUri: @Rootfs_url,
+        # #     created_at: params[:submission][:created_at],
+        # #     updated_at: params[:submission][:updated_at]
+        # #     )
+        
         @my_hash = {
             :BinUri => @submission.BinUri, 
             :RootfsUri => @submission.BinUri,
@@ -31,22 +43,33 @@ class SubmissionsController < ApplicationController
             :Command => @contest.Command.split(","),
             :Stdin => @contest.Stdin
         } 
-        @msg = JSON.generate(@my_hash)
 
+        @msg = JSON.generate(@my_hash)
         conn = Bunny.new(:automatically_recover => false)
         conn.start
-
         ch   = conn.create_channel
         q    = ch.queue("task_queue", :durable => true)
-
         q.publish(@msg, :persistent => true)
         conn.close
-
-        if @submission.save
-            redirect_to contest_path(@contest), success: 'File successfully uploaded'
-        else
-            flash.now[:notice] = 'There was an error'
-            render :show
-        end
+        redirect_to contest_path(@contest)
     end
+
+    private
+    def submission_params
+      params.require(:submission).permit(:submitter, :BinUri, :RootfsUri)
+    end
+
+
+
+
+
+        # if @submission.save
+        #     redirect_to contest_path(@contest), success: 'File successfully uploaded'
+        # else
+        #     flash.now[:notice] = 'There was an error'
+        #     render :show
+        # end
+
+
+    # end
 end
