@@ -3,11 +3,9 @@
 one:
   submitter: MyString
   BinUri: MyString
-  RootfsUri: MyString
   contest: one
 
 two:
   submitter: MyString
   BinUri: MyString
-  RootfsUri: MyString
   contest: two
